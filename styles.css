@@ -171,19 +171,23 @@ body {
 
 @keyframes invite-rise {
   0% {
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%);
   }
   100% {
-    transform: translate(-50%, -130%) scale(1);
+    transform: translate(-50%, -130%);
   }
 }
 
 @keyframes invite-grow {
   0% {
-    transform: translate(-50%, -130%) scale(1);
+    transform: translate(-50%, -130%);
+    width: var(--inv-current-w);
+    height: var(--inv-current-h);
   }
   100% {
-    transform: translate(-50%, -50%) scale(var(--final-scale, 2.6));
+    transform: translate(-50%, -50%);
+    width: var(--inv-final-w);
+    height: var(--inv-final-h);
   }
 }
 
@@ -211,7 +215,9 @@ body {
     animation: none;
   }
   .is-opening .invitation {
-    transform: translate(-50%, -50%) scale(var(--final-scale, 2.6));
+    transform: translate(-50%, -50%);
+    width: var(--inv-final-w);
+    height: var(--inv-final-h);
     z-index: 100;
   }
   .is-opening .cta {

@@ -21,9 +21,16 @@ cta.href = WEDDING_URL;
 function setFinalScale() {
   const rect = invitation.getBoundingClientRect();
   if (rect.width === 0) return;
-  const targetW = Math.min(window.innerWidth * 0.84, window.innerHeight * 0.84 * INVITATION_ASPECT);
-  const scale = targetW / rect.width;
-  stage.style.setProperty("--final-scale", scale.toFixed(3));
+  const aspect =
+    invitation.naturalWidth > 0 && invitation.naturalHeight > 0
+      ? invitation.naturalWidth / invitation.naturalHeight
+      : INVITATION_ASPECT;
+  const targetW = Math.min(window.innerWidth * 0.84, window.innerHeight * 0.84 * aspect);
+  const targetH = targetW / aspect;
+  stage.style.setProperty("--inv-current-w", `${rect.width.toFixed(2)}px`);
+  stage.style.setProperty("--inv-current-h", `${rect.height.toFixed(2)}px`);
+  stage.style.setProperty("--inv-final-w", `${targetW.toFixed(2)}px`);
+  stage.style.setProperty("--inv-final-h", `${targetH.toFixed(2)}px`);
 }
 
 window.addEventListener("resize", setFinalScale);
