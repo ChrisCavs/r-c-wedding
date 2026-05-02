@@ -200,8 +200,10 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .is-opening .envelope {
-    display: none;
+  .is-opening .envelope-back,
+  .is-opening .envelope-front,
+  .is-opening .envelope-flap {
+    opacity: 0;
   }
   .is-opening .envelope-flap,
   .is-opening .invitation,
@@ -210,6 +212,7 @@ body {
   }
   .is-opening .invitation {
     transform: translate(-50%, -50%) scale(var(--final-scale, 2.6));
+    z-index: 100;
   }
   .is-opening .cta {
     opacity: 1;
