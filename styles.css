@@ -88,11 +88,73 @@ body {
   height: 76%;
   aspect-ratio: 0.72 / 1;
   transform: translate(-50%, -50%);
-  object-fit: cover;
   border-radius: 4px;
   background: #fff;
+  overflow: hidden;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
   z-index: 2;
+}
+
+.invite-page {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* The card is sized to the active image, so this normally fills it exactly;
+     contain keeps the two invites' slightly different ratios from clipping. */
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+.invite-page.is-active {
+  opacity: 1;
+}
+
+.has-nav .invitation {
+  cursor: pointer;
+}
+
+.deck-nav {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: max(2.5vh, 1rem);
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.3rem;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.deck-dot {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: transparent;
+  padding: 0.5em 1.2em;
+  border-radius: 999px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.deck-dot:hover,
+.deck-dot:focus-visible {
+  background: rgba(111, 82, 52, 0.12);
+  outline: none;
+}
+
+.deck-dot.is-active {
+  background: var(--accent);
+  color: #fff;
 }
 
 .cta {
@@ -127,7 +189,8 @@ body {
   outline: none;
 }
 
-.is-opening .cta {
+.is-opening .cta,
+.is-opening .deck-nav {
   animation: cta-fadein 600ms ease 2750ms forwards;
 }
 
@@ -211,8 +274,12 @@ body {
   }
   .is-opening .envelope-flap,
   .is-opening .invitation,
-  .is-opening .cta {
+  .is-opening .cta,
+  .is-opening .deck-nav {
     animation: none;
+  }
+  .invite-page {
+    transition: none;
   }
   .is-opening .invitation {
     transform: translate(-50%, -50%);
@@ -220,7 +287,8 @@ body {
     height: var(--inv-final-h);
     z-index: 100;
   }
-  .is-opening .cta {
+  .is-opening .cta,
+  .is-opening .deck-nav {
     opacity: 1;
     pointer-events: auto;
   }
@@ -229,6 +297,10 @@ body {
 @media (max-width: 480px) {
   .stage {
     padding-bottom: 16vh;
+  }
+  .deck-dot {
+    font-size: 0.62rem;
+    padding: 0.5em 0.95em;
   }
   .cta {
     font-size: 0.75rem;
