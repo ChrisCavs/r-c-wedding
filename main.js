@@ -24,7 +24,9 @@ const WEDDING_URL =
 const INVITATION_ASPECT = 0.72;
 
 // Breathing room between the card and the pager above / the button below.
-const EDGE_GAP = 20;
+// Scales with the viewport so the proportions hold from phone to desktop.
+const edgeGap = () =>
+  Math.min(Math.max(window.innerHeight * 0.03, 16), 32);
 
 const stage = document.querySelector(".stage");
 const envelope = document.querySelector(".envelope");
@@ -92,27 +94,27 @@ function syncNav() {
 }
 
 function setFinalScale() {
-  const rect = deck.getBoundingClientRect();
-  if (rect.width === 0) return;
   const active = pages[index];
   const aspect =
     active.naturalWidth > 0 && active.naturalHeight > 0
       ? active.naturalWidth / active.naturalHeight
       : INVITATION_ASPECT;
-  // The card grows from the envelope's centre, with the pager above it and
-  // the button below. Measure both so the card fills whatever is left over
-  // instead of guessing at fixed bands.
+  // The pager and the button are both fixed, so their edges bound the space
+  // the card may occupy. Pad the stage to match, which centres the card in
+  // that band instead of leaving the slack all at one end.
+  const gap = edgeGap();
+  const ceiling = hasNav ? deckNav.getBoundingClientRect().bottom + gap : gap;
+  const floor = cta.getBoundingClientRect().top - gap;
+  stage.style.paddingTop = `${ceiling}px`;
+  stage.style.paddingBottom = `${window.innerHeight - floor}px`;
   const box = envelope.getBoundingClientRect();
   const centre = box.top + box.height / 2;
-  const ceiling = hasNav ? deckNav.getBoundingClientRect().bottom : 0;
-  const floor = cta.getBoundingClientRect().top;
   // Centred growth means the tighter side caps both halves.
-  const maxH = Math.max(
-    2 * Math.min(centre - ceiling - EDGE_GAP, floor - EDGE_GAP - centre),
-    120
-  );
+  const maxH = Math.max(2 * Math.min(centre - ceiling, floor - centre), 120);
   const targetW = Math.min(window.innerWidth * 0.84, maxH * aspect);
   const targetH = targetW / aspect;
+  const rect = deck.getBoundingClientRect();
+  if (rect.width === 0) return;
   stage.style.setProperty("--inv-current-w", `${rect.width.toFixed(2)}px`);
   stage.style.setProperty("--inv-current-h", `${rect.height.toFixed(2)}px`);
   stage.style.setProperty("--inv-final-w", `${targetW.toFixed(2)}px`);
