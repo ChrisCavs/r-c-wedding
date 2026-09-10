@@ -119,7 +119,7 @@ body {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  top: max(2.5vh, 1rem);
+  top: calc(env(safe-area-inset-top, 0px) + max(2.5vh, 1rem));
   display: flex;
   gap: 0.5rem;
   padding: 0.3rem;
@@ -298,6 +298,9 @@ body {
   .stage {
     padding-bottom: 16vh;
   }
+  .deck-nav {
+    top: calc(env(safe-area-inset-top, 0px) + 2.25rem);
+  }
   .deck-dot {
     font-size: 0.62rem;
     padding: 0.5em 0.95em;
@@ -306,35 +309,5 @@ body {
     font-size: 0.75rem;
     padding: 0.85em 1.8em;
     letter-spacing: 0.15em;
-  }
-}
-
-@media (min-width: 1024px) {
-  .cta {
-    bottom: auto;
-    top: 50%;
-    left: calc(50% + min(42vw, 31vh) + 1.75rem);
-    transform: translateY(-50%);
-  }
-
-  .cta:hover,
-  .cta:focus-visible {
-    transform: translateY(-50%) translateY(-2px);
-  }
-
-  .is-opening .cta {
-    animation: cta-fadein-side 600ms ease 2750ms forwards;
-  }
-
-  @keyframes cta-fadein-side {
-    0% {
-      opacity: 0;
-      transform: translateY(-50%) translateX(-12px);
-    }
-    100% {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(-50%) translateX(0);
-    }
   }
 }

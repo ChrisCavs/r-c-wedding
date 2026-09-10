@@ -23,10 +23,11 @@ const WEDDING_URL =
 
 const INVITATION_ASPECT = 0.72;
 
-// Height of the pager plus its breathing room, kept in sync with .deck-nav.
-const PAGER_BAND = 96;
+// Breathing room between the card and the pager above / the button below.
+const EDGE_GAP = 20;
 
 const stage = document.querySelector(".stage");
+const envelope = document.querySelector(".envelope");
 const deck = document.querySelector(".invitation");
 const deckNav = document.querySelector(".deck-nav");
 const cta = document.querySelector(".cta");
@@ -98,10 +99,18 @@ function setFinalScale() {
     active.naturalWidth > 0 && active.naturalHeight > 0
       ? active.naturalWidth / active.naturalHeight
       : INVITATION_ASPECT;
-  // The pager sits in a band above the card, so take it out of the height
-  // budget rather than letting the card grow underneath it.
-  const reserved = hasNav ? PAGER_BAND : 0;
-  const maxH = (window.innerHeight - reserved) * 0.84;
+  // The card grows from the envelope's centre, with the pager above it and
+  // the button below. Measure both so the card fills whatever is left over
+  // instead of guessing at fixed bands.
+  const box = envelope.getBoundingClientRect();
+  const centre = box.top + box.height / 2;
+  const ceiling = hasNav ? deckNav.getBoundingClientRect().bottom : 0;
+  const floor = cta.getBoundingClientRect().top;
+  // Centred growth means the tighter side caps both halves.
+  const maxH = Math.max(
+    2 * Math.min(centre - ceiling - EDGE_GAP, floor - EDGE_GAP - centre),
+    120
+  );
   const targetW = Math.min(window.innerWidth * 0.84, maxH * aspect);
   const targetH = targetW / aspect;
   stage.style.setProperty("--inv-current-w", `${rect.width.toFixed(2)}px`);
